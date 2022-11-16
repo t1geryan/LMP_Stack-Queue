@@ -27,24 +27,24 @@ bool check_bracket_balance(std::string str)
 	return result && stack.isEmpty();
 }
 
-bool print_all_childs(int ** matrix, int size, int humanI)
+bool print_all_childs(int ** familyMatrix, std::string* nameArray, int size, int humanI)
 {
 	bool isHaveChilds = false;
 	Queue qu;
 	for (int i = 0; i < size; ++i) // сначала закладываем всех прямых потомков в очередь
-		if (matrix[humanI][i]) {
+		if (familyMatrix[humanI][i]) {
 			isHaveChilds = true;
 			qu.push(i);
 		}
-	while (!qu.isEmpty()) { // если прямые потомки есть то выводим их индексы добавляем их прямых потомков
+	while (!qu.isEmpty()) { // если прямые потомки есть то выводим их имена и добавляем их прямых потомков
 		int index = qu.get_head();
 		qu.pop();
-		std::cout << index << ' ';
+		std::cout << nameArray[index] << ' ';
 		for (int i = 0; i < size; ++i)
-			if (matrix[index][i])
+			if (familyMatrix[index][i])
 				qu.push(i);
 	}
-	return isHaveChilds;
+	return isHaveChilds; 
 }
 
 int main()
@@ -53,11 +53,11 @@ int main()
 	if (file) {
 		int n;
 		file >> n;
-		int** matrix = new int* [n];
+		int** matrix = new int* [n]; // матрица - семейное древо
 		for (int i = 0; i < n; ++i)
 			matrix[i] = new int[n];
-
-		for (int i = 0; i < n; ++i) {
+	
+		for (int i = 0; i < n; ++i) { // инициализация и вывод древа
 			for (int j = 0; j < n; ++j) {
 				file >> matrix[i][j];
 				std::cout << matrix[i][j] << ' ';
@@ -65,15 +65,20 @@ int main()
 			std::cout << '\n';
 		}
 		std::cout << '\n';
+		std::string* array = new std::string[n]; // массив имён
+		for (int i = 0; i < n; ++i) 
+			file >> array[i]; // инициализация
 
-
-		if (!print_all_childs(matrix, n, 2)) 
+		std::cout << "Childs:\n"; // решение задачи
+		if (!print_all_childs(matrix, array, n, 4)) 
 			std::cout << "Don't have childs!\n";
 
-		for (int i = 0; i < n; ++i)
+		for (int i = 0; i < n; ++i) // освобождение памяти
 			delete[] matrix[i];
 		delete[] matrix;
+		delete[] array;
 	}
-	std::cin.get();
 	_CrtDumpMemoryLeaks();
+	std::cin.ignore(SHRT_MAX, '\n');
+	std::cin.get();
 }

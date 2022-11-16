@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 // Цепочная реализация стека на базе односвязного списка
-using TInfo = int;
+using TInfo = char;
 
 struct Node
 {
